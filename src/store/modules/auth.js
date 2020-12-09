@@ -11,7 +11,7 @@ export default {
     },
     actions: {
         async login({ context }) {
-            let response = await Axios.post('http://symbol-dot.local/auth/api/login', data);
+            let response = await Axios.post('login', data);
             console.log(response);
         }
     }
