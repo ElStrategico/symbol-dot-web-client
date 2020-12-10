@@ -42,6 +42,9 @@
         <div class="list-group-item-danger list-group-item" v-if="firstError">
           {{firstError}}
         </div>
+        <div class="position-relative form-group" v-if="loader">
+          <div class="lds-dual-ring"></div>
+        </div>
         <button class="mt-2 btn btn-primary">Регистрация</button>
       </form>
     </div>
@@ -60,11 +63,14 @@ export default {
       email: null,
       password: null,
       password_confirmation: null,
+      loader: false
     };
   },
   computed: mapGetters(['firstError']),
   methods: {
     submit() {
+      this.loader = true;
+
       let data = this.$data;
 
       this.$store.commit('setCreatableUser', data);
@@ -74,6 +80,8 @@ export default {
           this.$router.push('/login');
         }
       });
+
+      this.loader = false;
     }
   },
 };

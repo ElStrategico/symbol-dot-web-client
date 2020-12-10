@@ -45,7 +45,8 @@ export default {
   methods: {
     submit() {
       this.loader = true;
-      this.$store.dispatch('login', {login, password});
+      this.$store.dispatch('login');
+      this.loader = false;
     },
   },
 };

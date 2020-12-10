@@ -11,6 +11,12 @@ import TheHeader from '@/components/TheHeader';
 export default {
     components: {
         TheHeader
+    },
+    created: function() {
+      console.log('Created');
+    },
+    updated() {
+      console.log('Here');
     }
 }
 </script>
