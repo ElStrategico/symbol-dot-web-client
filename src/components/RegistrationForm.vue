@@ -39,8 +39,8 @@
             v-model="password_confirmation"
           />
         </div>
-        <div class="list-group-item-danger list-group-item" v-if="firstError">
-          {{firstError}}
+        <div class="list-group-item-danger list-group-item" v-if="firstRegError">
+          {{firstRegError}}
         </div>
         <div class="position-relative form-group" v-if="loader">
           <div class="lds-dual-ring"></div>
@@ -66,7 +66,7 @@ export default {
       loader: false
     };
   },
-  computed: mapGetters(['firstError']),
+  computed: mapGetters(['firstRegError']),
   methods: {
     submit() {
       this.loader = true;

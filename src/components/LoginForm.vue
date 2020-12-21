@@ -22,6 +22,9 @@
               v-model="password"
             />
           </div>
+          <div class="list-group-item-danger list-group-item" v-if="firstAuthError">
+            {{firstAuthError}}
+          </div>
           <div class="position-relative form-group" v-if="loader">
             <div class="lds-dual-ring"></div>
           </div>
@@ -33,6 +36,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import statuses from '@/http-common/statuses.js';
+
 export default {
   name: "LoginForm",
   data() {
@@ -42,10 +48,21 @@ export default {
       loader: false
     };
   },
+  computed: mapGetters(['firstAuthError']),
   methods: {
     submit() {
       this.loader = true;
-      this.$store.dispatch('login');
+
+      let credential = this.$data;
+      this.$store.commit('credential', credential);
+
+      this.$store.dispatch('login').then(response => {
+        if(response.status === statuses.OK)
+        {
+          this.$router.push('/');
+        }
+      })
+
       this.loader = false;
     },
   },
