@@ -3,16 +3,16 @@ import { HTTP } from '@/http-common';
 export default {
     state: {
         creatableUser: null,
-        errors: null
+        regErrors: null
     },
     getters: {
         creatableUser: state => state.creatableUser,
         created: state => !!state.creatableUser,
         errors: state => state.errors,
-        firstError(state) {
-            if (!state.errors) return '';
+        firstRegError(state) {
+            if (!state.regErrors) return '';
 
-            let message = state.errors[Object.keys(state.errors)[0]][0];
+            let message = regErrors.errors[Object.keys(state.regErrors)[0]][0];
             return message ? message : '';
         }
     },
@@ -20,8 +20,8 @@ export default {
         setCreatableUser(state, data) {
             state.creatableUser = data;
         },
-        setErrors(state, errors = null) {
-            state.errors = errors;
+        setRegErrors(state, errors = null) {
+            state.regErrors = errors;
         }
     },
     actions: {
