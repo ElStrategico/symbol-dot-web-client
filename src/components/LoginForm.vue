@@ -3,30 +3,30 @@
     <div class="main-card mb-3 card" style="margin-top: 100px">
       <div class="card-body">
         <h5 class="card-title">Форма авторизации</h5>
-        <form v-on:submit.prevent="submit">
+        <form @submit.prevent="submit">
           <div class="position-relative form-group">
             <input
+              v-model="email"
               name="email"
               placeholder="Почта"
               type="text"
               class="form-control"
-              v-model="login"
             />
           </div>
           <div class="position-relative form-group">
             <input
+              v-model="password"
               name="password"
               placeholder="Пароль"
               type="password"
               class="form-control"
-              v-model="password"
             />
           </div>
-          <div class="list-group-item-danger list-group-item" v-if="firstAuthError">
-            {{firstAuthError}}
+          <div>
+            <ErrorAlert v-if="error" :message="error" />
           </div>
-          <div class="position-relative form-group" v-if="loader">
-            <div class="lds-dual-ring"></div>
+          <div>
+            <Loader v-if="loader"/>
           </div>
           <button class="mt-2 btn btn-primary">Авторизация</button>
         </form>
@@ -36,34 +36,50 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import statuses from '@/http-common/statuses.js';
+import Loader from "./Loader";
+import ErrorAlert from "@/components/ErrorAlert";
+import ErrorFetcher from "@/helpers/error-fetcher";
 
 export default {
   name: "LoginForm",
   data() {
     return {
-      login: "",
-      password: "",
-      loader: false
+      loader: false,
+      error: ''
     };
   },
-  computed: mapGetters(['firstAuthError']),
+  components: {Loader, ErrorAlert},
+  computed: {
+    email: {
+      get() {
+        return this.$store.getters.email;
+      },
+      set(value) {
+        this.$store.commit('setEmail', value);
+      }
+    },
+    password: {
+      get() {
+        return this.$store.getters.password;
+      },
+      set(value) {
+        this.$store.commit('setPassword', value);
+      }
+    }
+  },
   methods: {
-    submit() {
+    async submit() {
       this.loader = true;
+      this.error = '';
 
-      let credential = this.$data;
-      this.$store.commit('credential', credential);
-
-      this.$store.dispatch('login').then(response => {
-        if(response.status === statuses.OK)
-        {
-          this.$router.push('/');
-        }
-      })
-
-      this.loader = false;
+      try {
+        await this.$store.dispatch('login');
+        this.$emit('authorized');
+      } catch(e) {
+        this.error = ErrorFetcher.firstError(e.response);
+      } finally {
+        this.loader = false;
+      }
     },
   },
 };

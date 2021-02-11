@@ -5,45 +5,45 @@
       <form @submit.prevent="submit">
         <div class="position-relative form-group">
           <input
+            v-model="name"
             name="name"
             placeholder="Придумайте никнейм"
             type="text"
             class="form-control"
-            v-model="name"
           />
         </div>
         <div class="position-relative form-group">
           <input
+            v-model="email"
             name="email"
             placeholder="Введитие вашу почту"
             type="text"
             class="form-control"
-            v-model="email"
           />
         </div>
         <div class="position-relative form-group">
           <input
+            v-model="password"
             name="password"
             placeholder="Придумайте пароль"
             type="password"
             class="form-control"
-            v-model="password"
           />
         </div>
         <div class="position-relative form-group">
           <input
+            v-model="password_confirmation"
             name="password_confirmation"
             placeholder="Повторите пароль"
             type="password"
             class="form-control"
-            v-model="password_confirmation"
           />
         </div>
-        <div class="list-group-item-danger list-group-item" v-if="firstRegError">
-          {{firstRegError}}
+        <div>
+          <ErrorAlert v-if="error" :message="error" />
         </div>
-        <div class="position-relative form-group" v-if="loader">
-          <div class="lds-dual-ring"></div>
+        <div>
+          <Loader v-if="loader"/>
         </div>
         <button class="mt-2 btn btn-primary">Регистрация</button>
       </form>
@@ -52,36 +52,64 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import statuses from '@/http-common/statuses.js';
+import Loader from "@/components/Loader";
+import ErrorAlert from "@/components/ErrorAlert";
+import ErrorFetcher from "@/helpers/error-fetcher";
 
 export default {
   name: "RegistrationForm",
   data() {
     return {
-      name: null,
-      email: null,
-      password: null,
-      password_confirmation: null,
-      loader: false
+      loader: false,
+      error: ''
     };
   },
-  computed: mapGetters(['firstRegError']),
+  components: {Loader, ErrorAlert},
+  computed: {
+    name: {
+      get() {
+        return this.$store.getters.creatableUserName;
+      },
+      set(value) {
+        this.$store.commit('setCreatableName', value);
+      }
+    },
+    email: {
+      get() {
+        return this.$store.getters.creatableUserEmail;
+      },
+      set(value) {
+        this.$store.commit('setCreatableEmail', value);
+      }
+    },
+    password: {
+      get() {
+        return this.$store.getters.creatableUserPassword;
+      },
+      set(value) {
+        this.$store.commit('setCreatablePassword', value);
+      }
+    },
+    password_confirmation: {
+      get() {
+        return this.$store.getters.creatableUserPasswordConfirmation;
+      },
+      set(value) {
+        this.$store.commit('setCreatablePasswordConfirmation', value);
+      }
+    }
+  },
   methods: {
-    submit() {
+    async submit() {
       this.loader = true;
-
-      let data = this.$data;
-
-      this.$store.commit('setCreatableUser', data);
-      this.$store.dispatch('createUser').then(response => {
-        if(response.status === statuses.CREATED)
-        {
-          this.$router.push('/login');
-        }
-      });
-
-      this.loader = false;
+      try {
+        await this.$store.dispatch('registration');
+        this.$emit('registered');
+      } catch(e) {
+        this.error = ErrorFetcher.firstError(e.response);
+      } finally {
+        this.loader = false;
+      }
     }
   },
 };

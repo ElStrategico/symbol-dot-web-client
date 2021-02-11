@@ -1,67 +1,59 @@
+import Time from '@/helpers/time';
 import { HTTP } from '@/http-common';
 
 export default {
     state: {
-        login: null,
-        password: null,
+        email: '',
+        password: '',
         token: localStorage.getItem('token'),
-        expired: +localStorage.getItem('expired'),
-        authErrors: null
+        expires_in: localStorage.getItem('expires_in'),
+        authorizedUser: null
     },
     getters: {
-        isAuth(state) {
-            return state.token != undefined;
+        email(state) {
+            return state.email;
         },
-        tokenExpired(state) {
-            let currentTime = Math.floor(Date.now() / 1000);
-            return currentTime > state.expired;
+        password(state) {
+            return state.password;
         },
         credential(state) {
             return {
-                email: state.login,
+                email: state.email,
                 password: state.password
             }
         },
-        firstAuthError(state) {
-            if (!state.authErrors) return '';
-
-            let message = state.authErrors[Object.keys(state.authErrors)[0]][0];
-            return message ? message : '';
+        isAuth(state) {
+            return !!state.token;
+        },
+        authorizedUser(state) {
+            return state.authorizedUser;
         }
     },
     mutations: {
-        setToken(state, token) {
-            localStorage.setItem('token', token);
-            state.token = token;
+        setEmail(state, email) {
+            state.email = email;
         },
-        setExpired(state, expired) {
-            let currentTime = Math.floor(Date.now() / 1000);
-            expired = currentTime + +expired;
-
-            localStorage.setItem('expired', expired);
-            state.expired = expired;
+        setPassword(state, password) {
+            state.password = password;
         },
-        credential(state, data) {
-            state.login = data.login;
-            state.password = data.password;
+        setAuth(state, auth) {
+            state.token = auth.access_token;
+            state.expires_in = Time.get() + auth.expires_in;
+            localStorage.setItem('token', state.token);
+            localStorage.setItem('expires_in', state.expires_in);
         },
-        setAuthErrors(state, errors = null) {
-            state.authErrors = errors;
+        setAuthorizedUser(state, user) {
+            state.authorizedUser = user;
         }
     },
     actions: {
         async login({ commit, getters }) {
-            try {
-                let response = await HTTP.post('auth/login', getters.credential);
-
-                commit('setToken', response.data.access_token);
-                commit('setExpired', response.data.expires_in);
-
-                return response;
-            } catch (error) {
-                commit('setAuthErrors', error.response.data.errors);
-                return error.response;
-            }
+            let response = await HTTP.post('api/v1/auth/login', getters.credential);
+            commit('setAuth', response.data);
+        },
+        async me({commit, getters}) {
+            let response = await HTTP.get('api/v1/auth/me');
+            commit('setAuthorizedUser', response.data);
         }
     }
 }
