@@ -102,7 +102,7 @@ export default {
       if(this.isAuth)
       {
         return [
-          {title: 'Контакты', link: '/', icon: 'fa fa-database'},
+          {title: 'Контакты', link: '/contact', icon: 'fa fa-database'},
           {title: 'Проекты', link: '/', icon: 'fa fa-edit'},
           {title: 'Настройки', link: '/', icon: 'fa fa-cog'}
         ];
