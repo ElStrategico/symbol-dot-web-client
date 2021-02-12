@@ -6,7 +6,7 @@ export default {
         email: '',
         password: '',
         token: localStorage.getItem('token'),
-        expires_in: localStorage.getItem('expires_in'),
+        expires_in: +localStorage.getItem('expires_in'),
         authorizedUser: null
     },
     getters: {
@@ -27,6 +27,9 @@ export default {
         },
         authorizedUser(state) {
             return state.authorizedUser;
+        },
+        isExpired(state) {
+            return Time.get() >= state.expires_in;
         }
     },
     mutations: {
@@ -44,6 +47,15 @@ export default {
         },
         setAuthorizedUser(state, user) {
             state.authorizedUser = user;
+        },
+        setVerifyEmail(state) {
+            state.authorizedUser.email_verified_at = true;
+        },
+        logout(state) {
+            state.token = null;
+            state.expires_in = null;
+            localStorage.removeItem('token');
+            localStorage.removeItem('expires_in');
         }
     },
     actions: {
@@ -51,9 +63,19 @@ export default {
             let response = await HTTP.post('api/v1/auth/login', getters.credential);
             commit('setAuth', response.data);
         },
+        async refresh({commit}) {
+            let response = await HTTP.post('api/v1/auth/refresh');
+            commit('setAuth', response.data);
+        },
         async me({commit, getters}) {
-            let response = await HTTP.get('api/v1/auth/me');
-            commit('setAuthorizedUser', response.data);
+            if(!getters.isAuth) return;
+
+            try {
+                let response = await HTTP.get('api/v1/auth/me');
+                commit('setAuthorizedUser', response.data);
+            } catch(e) {
+                commit('logout');
+            }
         }
     }
 }
