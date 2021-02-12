@@ -4,6 +4,12 @@
       <div class="row">
         <div class="col-lg-6">
           <img v-if="authorizedUser" class="avatar img-fluid" :src="avatar">
+          <div style="margin-top: 10px;">
+            <UploadAvatar
+                @uploadAvatar="uploadAvatar"
+                @cancelSetAvatar="cancelSetAvatar"
+            />
+          </div>
         </div>
         <div v-if="authorizedUser" class="col-lg-6">
           <span class="text">Имя: {{authorizedUser.name}}</span>
@@ -22,13 +28,32 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import UploadAvatar from "@/components/UploadAvatar";
 
 export default {
   name: "PersonalData",
+  data() {
+    return {
+      localAvatar: ''
+    }
+  },
+  components: {UploadAvatar},
   computed: {
     ...mapGetters(['authorizedUser']),
     avatar() {
+      if(this.localAvatar) {
+        return this.localAvatar;
+      }
+
       return `http://symbol-dot.local${this.authorizedUser.avatar}`;
+    }
+  },
+  methods: {
+    uploadAvatar(dataURL) {
+      this.localAvatar = dataURL;
+    },
+    cancelSetAvatar() {
+      this.localAvatar = '';
     }
   }
 }
