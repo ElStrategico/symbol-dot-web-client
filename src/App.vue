@@ -1,7 +1,9 @@
 <template>
     <div id="app">
         <TheHeader />
-        <router-view/>
+        <div class="app-main">
+          <router-view/>
+        </div>
     </div>
 </template>
 
@@ -12,11 +14,10 @@ export default {
     components: {
         TheHeader
     },
-    created: function() {
-      console.log('Created');
-    },
     updated() {
-      console.log('Here');
+      if(this.$store.getters.isAuth && this.$store.getters.isExpired) {
+        this.$store.dispatch('refresh');
+      }
     }
 }
 </script>
