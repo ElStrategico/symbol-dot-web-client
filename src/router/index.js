@@ -22,6 +22,16 @@ const routes = [{
         path: '/profile',
         name: 'Profile',
         component: () => import('../views/Profile')
+    },
+    {
+        path: '/settings',
+        name: 'Settings',
+        component: () => import('../views/Settings')
+    },
+    {
+        path: '/contact',
+        name: 'Contact',
+        component: () => import("../views/Contact")
     }
 ]
 
