@@ -1,16 +1,13 @@
 <template>
-  <div class="app-header header-shadow">
+  <div>
+    <div class="app-header header-shadow">
     <div class="app-header__logo">
       <h3>
         <router-link to="/">Symbol Dot</router-link>
       </h3>
       <div class="header__pane ml-auto">
         <div>
-          <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
-            <span class="hamburger-box">
-              <span class="hamburger-inner"></span>
-            </span>
-          </button>
+
         </div>
       </div>
     </div>
@@ -61,8 +58,8 @@
                     <i class="fa fa-angle-down ml-2 opacity-8"></i>
                   </a>
                   <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                    <button type="button" tabindex="0" class="dropdown-item">Профиль</button>
-                    <button type="button" tabindex="0" class="dropdown-item">Настройки</button>
+                    <router-link to="/profile" tabindex="0" class="dropdown-item">Профиль</router-link>
+                    <router-link to="/settings" tabindex="0" class="dropdown-item">Настройки</router-link>
                     <button type="button" tabindex="0" class="dropdown-item">Помощь</button>
                     <div tabindex="-1" class="dropdown-divider"></div>
                     <button type="button" tabindex="0" class="dropdown-item">Выход</button>
@@ -84,10 +81,14 @@
       </div>
     </div>
   </div>
+    <div v-if="authorizedUser && !authorizedUser.email_verified_at" class="alert alert-warning">
+      <router-link to="/profile">Подтвердите почту, на почтовый ящик {{authorizedUser.email}} отправлен код подтверждения</router-link>
+    </div>
+  </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   computed: {
