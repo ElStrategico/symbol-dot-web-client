@@ -32,6 +32,11 @@ const routes = [{
         path: '/contact',
         name: 'Contact',
         component: () => import("../views/Contact")
+    },
+    {
+        path: '/contact/create',
+        name: 'CreateContact',
+        component: () => import("../views/CreateContact")
     }
 ]
 
