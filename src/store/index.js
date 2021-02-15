@@ -6,6 +6,7 @@ import contact from '@/store/modules/contact'
 import security from '@/store/modules/security'
 import userAvatar from '@/store/modules/user-avatar'
 import creatableUser from '@/store/modules/creatable-user'
+import creatableContact from '@/store/modules/creatable-contact';
 
 Vue.use(Vuex)
 
@@ -16,5 +17,6 @@ export default new Vuex.Store({
         security,
         userAvatar,
         creatableUser,
+        creatableContact
     }
 })
