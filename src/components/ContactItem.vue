@@ -1,22 +1,24 @@
 <template>
-  <div class="contact">
-    <a href="#" class="contact-link">
-      <span v-html="fullName" class="text">{{fullName}}</span>
-      <span class="text">{{contact.email}}</span>
-      <span class="text">{{contact.phone}}</span>
-      <span class="text-min">{{contact.description}}</span>
-    </a>
-  </div>
+  <tr @click="show" class="contact">
+    <td v-html="fullName">{{fullName}}</td>
+    <td>{{phone}}</td>
+    <td>{{email}}</td>
+    <td>
+      <ContactTag name="Foo" color="#000" background-color="#f2f2f2"/>
+    </td>
+  </tr>
 </template>
 
 <script>
 import {mapGetters} from "vuex";
+import ContactTag from "@/components/ContactTag";
 
 export default {
   name: "Contact",
   props: {
     contact: Object
   },
+  components: {ContactTag},
   computed: {
     ...mapGetters(['contactSearchQuery']),
     fullName() {
@@ -25,6 +27,17 @@ export default {
       let replace = `<span class="highlight">${this.contactSearchQuery}</span>`
 
       return fullName.replace(regExp, replace);
+    },
+    phone() {
+      return this.contact.phone ? this.contact.phone : '-';
+    },
+    email() {
+      return this.contact.email ? this.contact.email : '-';
+    }
+  },
+  methods: {
+    show() {
+      this.$router.push(`/contact/${this.contact.id}`);
     }
   }
 }
@@ -32,24 +45,7 @@ export default {
 
 <style>
 .contact {
-  padding: 10px;
-  text-align: left;
-  border-radius: 10px;
-  background: #f2f2f2;
-  margin-bottom: 10px;
-}
-.contact-link {
-  text-decoration: none;
-}
-.text {
-  color: #000;
-  display: block;
-  font-size: 20px;
-}
-.text-min {
-  color: #000;
-  display: block;
-  font-size: 15px;
+  cursor: pointer;
 }
 .highlight {
   background: #ffc107;

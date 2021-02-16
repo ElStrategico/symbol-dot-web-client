@@ -1,45 +1,67 @@
 <template>
-  <form @submit.prevent="submit" class="form">
-    <h3>Добавление контакта</h3>
-    <div class="form-group">
-      <label>Фамилия</label>
-      <input v-model="creatableContact.last_name" type="text" class="form-control" placeholder="Иванов">
-    </div>
-    <div class="form-group">
-      <label>Имя</label>
-      <input v-model="creatableContact.first_name" type="text" class="form-control" placeholder="Иван">
-    </div>
-    <div class="form-group">
-      <label>Отчество</label>
-      <input v-model="creatableContact.patronymic" type="text" class="form-control" placeholder="Иванович">
-    </div>
-    <div class="form-group">
-      <label>Почта</label>
-      <input v-model="creatableContact.email" type="email" class="form-control" placeholder="example@example.com">
-    </div>
-    <div class="form-group">
-      <label>Телефон</label>
-      <VueTelInput v-model="creatableContact.phone" />
-      <div style="text-align: left">
-        <span v-if="creatableContact.phone">Введенный номер: {{creatableContact.phone}}</span>
+  <div class="container form-container">
+    <div class="row">
+      <div class="col-lg-12">
+        <h3>Добавление контакта</h3>
       </div>
     </div>
-    <div class="form-group">
-      <label>Описание</label>
-      <textarea v-model="creatableContact.description" class="form-control">
+    <div class="row">
+      <div class="col-lg-6">
+        <form @submit.prevent="submit">
+          <div class="form-group">
+            <label>Фамилия</label>
+            <input v-model="creatableContact.last_name" type="text" class="form-control" placeholder="Иванов">
+          </div>
+          <div class="form-group">
+            <label>Имя</label>
+            <input v-model="creatableContact.first_name" type="text" class="form-control" placeholder="Иван">
+          </div>
+          <div class="form-group">
+            <label>Отчество</label>
+            <input v-model="creatableContact.patronymic" type="text" class="form-control" placeholder="Иванович">
+          </div>
+          <div class="form-group">
+            <label>Почта</label>
+            <input v-model="creatableContact.email" type="email" class="form-control" placeholder="example@example.com">
+          </div>
+          <div class="form-group">
+            <label>Телефон</label>
+            <VueTelInput v-model="creatableContact.phone" />
+            <div style="text-align: left">
+              <span v-if="creatableContact.phone">Введенный номер: {{creatableContact.phone}}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Описание</label>
+            <textarea v-model="creatableContact.description" class="form-control">
 
-      </textarea>
+            </textarea>
+          </div>
+          <div>
+            <ErrorAlert v-if="error" :message="error"/>
+          </div>
+          <div>
+            <button type="submit" class="btn btn-success">Создать</button>
+          </div>
+          <div>
+            <Loader v-if="loader"/>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-6">
+        <div class="main-card mb-3 card">
+          <div class="card-body">
+            <div>
+              <h5 class="card-title">Тэги</h5>
+            </div>
+            <div>
+              <ContactTag v-for="i in new Array(10)" name="Tester" color="#000" background-color="#f2f2f2"/>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div>
-      <ErrorAlert v-if="error" :message="error"/>
-    </div>
-    <div>
-      <button type="submit" class="btn btn-success">Создать</button>
-    </div>
-    <div>
-      <Loader v-if="loader"/>
-    </div>
-  </form>
+  </div>
 </template>
 
 <script>
@@ -47,6 +69,7 @@ import Loader from "@/components/Loader";
 import { VueTelInput } from 'vue-tel-input';
 import 'vue-tel-input/dist/vue-tel-input.css';
 import ErrorAlert from "@/components/ErrorAlert";
+import ContactTag from "@/components/ContactTag";
 import ErrorFetcher from '@/helpers/error-fetcher';
 
 export default {
@@ -57,7 +80,7 @@ export default {
       error: ''
     }
   },
-  components: {Loader, ErrorAlert, VueTelInput},
+  components: {Loader, ErrorAlert, ContactTag, VueTelInput},
   computed: {
     creatableContact: {
       get() {
@@ -86,7 +109,7 @@ export default {
 </script>
 
 <style scoped>
-.form {
+.form-container {
   background: #f2f2f2;
   padding: 10px;
   border-radius: 10px;
