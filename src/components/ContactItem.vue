@@ -4,7 +4,12 @@
     <td>{{phone}}</td>
     <td>{{email}}</td>
     <td>
-      <ContactTag name="Foo" color="#000" background-color="#f2f2f2"/>
+      <ContactTag
+          v-for="tag in contact.tags"
+          :key="tag.id" :name="tag.name"
+          :color="tag.text_color"
+          :background-color="tag.background_color"
+      />
     </td>
   </tr>
 </template>

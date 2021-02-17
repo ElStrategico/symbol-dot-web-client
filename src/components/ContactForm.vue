@@ -49,15 +49,11 @@
         </form>
       </div>
       <div class="col-lg-6">
-        <div class="main-card mb-3 card">
-          <div class="card-body">
-            <div>
-              <h5 class="card-title">Тэги</h5>
-            </div>
-            <div>
-              <ContactTag v-for="i in new Array(10)" name="Tester" color="#000" background-color="#f2f2f2"/>
-            </div>
-          </div>
+        <div>
+          <TagPanel />
+        </div>
+        <div>
+          <CreateTag />
         </div>
       </div>
     </div>
@@ -67,9 +63,10 @@
 <script>
 import Loader from "@/components/Loader";
 import { VueTelInput } from 'vue-tel-input';
+import TagPanel from "@/components/TagPanel";
 import 'vue-tel-input/dist/vue-tel-input.css';
+import CreateTag from "@/components/CreateTag";
 import ErrorAlert from "@/components/ErrorAlert";
-import ContactTag from "@/components/ContactTag";
 import ErrorFetcher from '@/helpers/error-fetcher';
 
 export default {
@@ -77,10 +74,11 @@ export default {
   data() {
     return {
       loader: false,
+      contactLoader: false,
       error: ''
     }
   },
-  components: {Loader, ErrorAlert, ContactTag, VueTelInput},
+  components: {Loader, TagPanel, CreateTag, ErrorAlert, VueTelInput},
   computed: {
     creatableContact: {
       get() {

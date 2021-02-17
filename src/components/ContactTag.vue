@@ -23,6 +23,6 @@ export default {
   width: 10px;
 }
 .button {
-  font-size: 10px;
+  font-size: 15px;
 }
 </style>
