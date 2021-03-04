@@ -9,6 +9,16 @@ export default {
         tags(state) {
             return state.tags;
         },
+        selectedTags(state) {
+            return state.tags.filter(tag => {
+                return tag.selected;
+            });
+        },
+        selectedTagsIds(state, getters) {
+            return getters.selectedTags.map(selectedTag => {
+                return selectedTag.id;
+            });
+        },
         fetchContactTagUrl(state) {
             return state.fetchContactTagUrl;
         }
@@ -22,6 +32,15 @@ export default {
         },
         setFetchContactTagUrl(state, url) {
             state.fetchContactTagUrl = url;
+        },
+        toggleTagSelected(state, tagSelectable) {
+            state.tags = state.tags.map(tag => {
+               if(tagSelectable.id === tag.id) {
+                   tag.selected = !tag.selected;
+               }
+
+               return tag;
+            });
         }
     },
     actions: {
@@ -30,6 +49,10 @@ export default {
 
             commit('setTags', response.data.data);
             commit('setFetchContactTagUrl', response.next_page_url);
+        },
+        async createTag({commit}, creatableTag) {
+            let response = await HTTP.post('api/v1/contact-tags', creatableTag);
+            commit('addTag', response.data);
         }
     }
 }

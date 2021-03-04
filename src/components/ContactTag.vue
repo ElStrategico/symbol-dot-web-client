@@ -1,6 +1,6 @@
 <template>
   <div class="tag">
-    <button class="button mb-2 mr-2 btn" :style="{color: color, background: backgroundColor }">
+    <button @click="click" class="button mb-2 mr-2 btn" :style="{color: color, background: backgroundColor }">
       {{name}}
     </button>
   </div>
@@ -13,6 +13,11 @@ export default {
     name: String,
     color: String,
     backgroundColor: String
+  },
+  methods: {
+    click() {
+      this.$emit('click');
+    }
   }
 }
 </script>

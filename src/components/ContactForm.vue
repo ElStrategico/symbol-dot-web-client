@@ -22,7 +22,7 @@
           </div>
           <div class="form-group">
             <label>Почта</label>
-            <input v-model="creatableContact.email" type="email" class="form-control" placeholder="example@example.com">
+            <input v-model="creatableContact.email" type="email" class="form-control" placeholder="example@example.com" style="margin-bottom: 3px;">
           </div>
           <div class="form-group">
             <label>Телефон</label>
@@ -75,7 +75,7 @@ export default {
     return {
       loader: false,
       contactLoader: false,
-      error: ''
+      error: '',
     }
   },
   components: {Loader, TagPanel, CreateTag, ErrorAlert, VueTelInput},
@@ -112,5 +112,9 @@ export default {
   padding: 10px;
   border-radius: 10px;
   box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+}
+.add {
+  color: #2950ff;
+  cursor: pointer;
 }
 </style>

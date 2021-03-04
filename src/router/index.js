@@ -37,6 +37,11 @@ const routes = [{
         path: '/contact/create',
         name: 'CreateContact',
         component: () => import("../views/CreateContact")
+    },
+    {
+        path: '/contact/:id',
+        name: 'ContactDetail',
+        component: () => import("../views/ContactDetails")
     }
 ]
 

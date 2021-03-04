@@ -27,13 +27,16 @@ export default {
         }
     },
     actions: {
-        async createContact({commit, getters}) {
+        async createContact({commit, getters, rootGetters}) {
             let formData = new FormData();
             for(let key in getters.creatableContact) {
                 if(getters.creatableContact[key]) {
                     formData.append(key, getters.creatableContact[key]);
                 }
             }
+            rootGetters.selectedTagsIds.forEach(id => {
+                formData.append('tag_ids[]', id);
+            })
 
             await HTTP.post('api/v1/contacts', formData);
             commit('clearCreatableContact');
